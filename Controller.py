@@ -2,47 +2,75 @@ from Model import *
 from View import *
 
 
-def menu(connection):
-    x = int(input("1 to update\n"
-                  "2 to delete\n"
-                  "3 to insert\n"
-                  "4 to select table\n"
-                  "5 to search\n"
-                  "6 to insert random\n"
-                  "7 to end\n"
-                  "Input: "))
-    print("")
+def menu():
+    x = start_menu()
+
     if x == 1:
         table = tables()
-        update(connection, table)
+        inp = input_update(table)
+        try:
+            update(table, inp)
+        except Exception as _ex:
+            err_except(_ex)
+        data(x)
 
     elif x == 2:
         table = tables()
-        delete(connection, table)
+        n_id = del_id()
+        try:
+            delete(table, n_id)
+        except Exception as _ex:
+            err_except(_ex)
+        data(x)
 
     elif x == 3:
         table = tables()
-        insert(connection, table)
+        inp = input_insert(table)
+        try:
+            insert(table, inp)
+        except Exception as _ex:
+            err_except(_ex)
+        data(x)
 
     elif x == 4:
+        f_t = None
         table = tables()
-        f_t = select_table(connection, table)
+        inp = input_select()
+        try:
+            f_t = select_table(table, inp)
+        except Exception as _ex:
+            err_except(_ex)
         fetch(table, f_t)
 
     elif x == 5:
+        f_t = None
         table = tables()
-        f_t = search(connection, table)
-        fetch(table, f_t)
+        inp = input_search(table)
+        try:
+            f_t = search(table, inp)
+        except Exception as _ex:
+            err_except(_ex)
+        fetch(table, f_t[0])
+        search_time(f_t[1])
 
     elif x == 6:
         table = tables()
-
-        insert_rand(connection, table)
+        if table == 1 or table == 5:
+            count = count_rand()
+            try:
+                insert_rand(table, count)
+            except Exception as _ex:
+                err_except(_ex)
+        else:
+            try:
+                insert_rand(table, None)
+            except Exception as _ex:
+                err_except(_ex)
+        data(x)
 
     elif x == 7:
+        close()
+        print_close()
         return None
 
-    else:
-        print("\n[INFO] Error input, try again!\n")
-
-    menu(connection)
+    menu()
